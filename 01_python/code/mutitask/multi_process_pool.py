@@ -3,7 +3,6 @@ import multiprocessing
 from concurrent.futures.thread import ThreadPoolExecutor
 from concurrent.futures.process import ProcessPoolExecutor
 from multi_process import multi_process, single_process, single_count
-from ..util.perf_util import perf_count
 
 iterations = 100000000
 

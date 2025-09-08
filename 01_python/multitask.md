@@ -1,8 +1,8 @@
 ---
 title: Python的多任务处理
 tags:
-  - multitask
   - python
+  - multitask
 ---
 ## 一、Python多任务处理的方法
 `Python` 采用以下方法进行多任务的处理：
@@ -171,4 +171,20 @@ def multi_process_pool_by_concurrent_futures():
 - `cancel()`：用于使该进程在执行前被取消，若已经开始执行则无法取消。
 - `done()`：用于获取该进程是否完成或是取消。
 #### (3). 使用 `joblib` 库加速计算
+`joblib` 库是用于高效并行计算的库，其提供了许多简单易用的计算工具等。主要功能有：
+- 缓存计算结果，下次计算时直接调用减小重复计算；
+- 高效的序列化，对 `Numpy` 数组等大型的数据对象进行优化，加快序列化和反序列化的速度；
+- 使用并行计算，将任务拆分到多个进程或线程中执行，技术计算过程。
+这里只说明并行计算的内容，其他功能参考 [joblib](joblib.md) 查阅。
+```python
+def multi_process_pool_by_joblib():  
+    batch = 8  
+    step = iterations // batch  
+		  
+    with joblib.Parallel(batch) as parallel:  
+        result = parallel(joblib.delayed(single_count)(start, start + step) for start in range(1, iterations, step))  
+		  
+    return sum(result)
+```
+
 

@@ -1,7 +1,7 @@
 import multiprocessing
 import threading
 
-from ..util.perf_util import perf_count
+from perf_util import perf_count
 
 
 def single_count(start, end):
