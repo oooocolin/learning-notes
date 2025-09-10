@@ -1,5 +1,5 @@
 import joblib
-from perf_util import perf_count
+from python.code.util.perf_util import perf_count
 
 memory = joblib.Memory("cache", verbose=0)
 
