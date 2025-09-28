@@ -7,6 +7,7 @@
 
 ### 进阶
 - [多任务](python/multitask.md)
+- [项目规范](python/python-project-standard.md)
 
 ### 常用库
 - [joblib 并行计算库](python/joblib.md)
@@ -18,3 +19,11 @@
 
 ### 常用库
 - [Opencv 计算机视觉库](cxx/opencv.md)
+
+## AI
+### LLM
+- [llm-develop-intro.md](ai/llm-develop-intro.md)
+
+### DL
+- [ONNX](ai/onnx.md)
+
