@@ -55,7 +55,7 @@ project-name/
 ```
 ## 二、包管理工具、虚拟环境与构建工具
 一般 Python 默认使用 `pip` 来进行包管理，并且推荐 `venv` 作为隔离的虚拟环境工具，但在一些场景，`anaconda` 、 `miniconda` 等使用更为广泛。
-### 1. 包管理工具
+### 1. 包管理工具与虚拟环境
 #### (1). `pip` 
 官方支持的包管理工具，使用更为方便，但是本身没有虚拟环境对各种包做隔离，一般在虚拟环境中配合使用。
 - 安装包：`pip install pkg-name` 
@@ -103,7 +103,30 @@ dependencies= [
 - 如果要使用 Conda-forge 来源的包可以使用 `conda create -n env-name -c conda-forge` 创建虚拟环境，以及使用 `conda install -c conda-forge pkg-name` ，或是修改默认配置以及使用 Miniforge 使得默认使用 Conda-forge 内的包。
 - Mamba 是基于 Conda 生态将 `conda` 命令工具使用 C++ 重新实现并实现多线程下载的包管理工具，在下载方面更为快速，更适合大量的包管理下载，并且兼容 `conda` 命令，只需将命令的 `conda` 改为 `mamba` 即可，并且默认包含在 Miniforge 安装包内，无需额外安装。
 #### (4). UV
-
+UV 、 Poetry 这类包管理工具从底层依然是使用 `pip` 和 `venv` ，但提供了更为简单的接口方便用户使用，会自动在 `pyproject.toml` 配置文件内添加依赖信息，并创建虚拟环境，把对应依赖安装进环境。UV 为例，默认初始只需要建立最基本的结构的 `pyproject.toml` 配置文件，即可开始。
+- 添加依赖：`uv add pkg-name` 
+- 添加依赖，但是禁止从源码构建只允许预编译的目标包：`uv add pkg-name --no-build` 
+- 跳过依赖只安装包文件：`uv pip install pkg-name` 
+- 读取 `pyproject.toml` 配置文件：`uv sync` 
+- 执行代码（无需手动激活环境）：`uv run main.py` 
 #### (5). Pixi
 近期新兴的包管理工具，可兼容 Conda 生态。
+### 2. 构建工具
+Conda 的打包的 `.conda` 文件只能用于 Conda 生态，一般是用于上传到 channel 上，除此之外一般选择使用 UV、Poetry 此类打包为更轻量更易分享使用的 `.whl` 文件，可以兼容 `pip` 生态和 `conda` 生态。以下主要说的是 `.whl` 的打包和构建。  
+Python 的构建系统拆解为 frontend 和 backend ，用户使用命令行操作属于 frontend ，frontend  自行调用 backend 将代码打包成 `.whl` 文件。官方推荐的 frontend 为 `build` ，其默认使用的 backend 为 `setuptools` ，也可自行选择 UV、hatchling、LIT、Poetry 等第三方实现进行构建操作，他们之中有些只实现 frontend 和 backend 中的一个，有的都完成了实现。以下使用 `build` 和 `hatchling` 实现构建:
+- 在 `pyproject.toml` 配置 backend 为 `hatchling` ：
+```toml
+[build-system]  
+requires = ["hatchling"]  
+build-backend = "hatchling.build"
+```
+- 在 `pyproject.toml` 配置 `build` 需要打包的文件：
+```toml
+[tool.hatch.build.target.wheel]  
+packages = ["main.py"]
+```
+- 执行打包命令 `python -m build` (若想用 UV 来执行打包可以使用 `uv build` ，其速度更快)
+**注意**：
+- hatchling 需要在打包文件夹内需要存在 `__init__.py` 文件，不添加无法顺利完成打包。
+- 在以上的流程完成后就已经实现了打包，但是在实际的项目开发中，一般还需要将打包的代码安装到虚拟环境中，方便后续的测试等流程，需要执行 `pip install -e ` ，或是 `uv sync` 。
 
