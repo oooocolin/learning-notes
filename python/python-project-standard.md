@@ -84,7 +84,9 @@ dependencies= [
 ]
 ```
 安装时使用 `pip install .` 或是 `pip install -e .` (防止将源代码也安装到虚拟环境里，造成每次执行都得重新安装依赖)，其基本流程是将当前文件夹打包成安装包，再安装入虚拟环境。  
-但是这也带来了一个问题，`pyproject.toml` 配置文件需要自己手动去写依赖的包以及版本，而这需要使用 Poetry 、 UV 、PDM 这些包管理工具实现了。
+**注意**：
+- 但是这也带来了一个问题，`pyproject.toml` 配置文件需要自己手动去写依赖的包以及版本，而这需要使用 Poetry 、 UV 、PDM 这些包管理工具实现了。  
+- 在一些项目中，还存在 `setup.py` 文件，这是在 `pyproject.toml` 之前配置项目使用的，目前仍作为包含 C/C++ 扩展的补充配置部分。
 #### (3). Conda
 ##### (i). 概述
 在数据科学领域更为广泛使用的包管理工具和虚拟环境工具，使用 `conda` 命令进行包管理和虚拟环境管理。Anaconda、Miniconda、Conda-forge、Miniforge、Mamba 都是基于此套生态的工具或包仓库。
