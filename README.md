@@ -4,11 +4,13 @@
 # 目录
 ## Python
 ### 基础
+- [Python 容器](python/python-container.md)
 - [Python 细碎的基础知识](python/python-fragmented-notes.md)
 
 ### 进阶
 - [多任务](python/multitask.md)
 - [项目规范](python/python-project-standard.md)
+- [描述符](python/descriptor.md)
 
 ### 常用库
 - [joblib 并行计算库](python/joblib.md)
