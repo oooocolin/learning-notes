@@ -4,6 +4,7 @@
 # 目录
 ## Python
 ### 基础
+- [Python 容器](python/python-container.md)
 - [Python 细碎的基础知识](python/python-fragmented-notes.md)
 
 ### 进阶
