@@ -2,6 +2,9 @@
 个人学习笔记
 
 # 目录
+## 通用
+- [异常处理](common/exception.md)
+
 ## Python
 ### 基础
 - [Python 容器](python/python-container.md)
