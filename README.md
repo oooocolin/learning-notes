@@ -13,6 +13,7 @@
 ### 进阶
 - [多任务](python/multitask.md)
 - [项目规范](python/python-project-standard.md)
+- [装饰器](python/decorator.md)
 - [描述符（descriptor）](python/descriptor.md)
 
 ### 常用库
