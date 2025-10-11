@@ -2,6 +2,9 @@
 个人学习笔记
 
 # 目录
+## 通用
+- [异常处理](common/exception.md)
+
 ## Python
 ### 基础
 - [Python 容器](python/python-container.md)
@@ -10,7 +13,8 @@
 ### 进阶
 - [多任务](python/multitask.md)
 - [项目规范](python/python-project-standard.md)
-- [描述符](python/descriptor.md)
+- [装饰器](python/decorator.md)
+- [描述符（descriptor）](python/descriptor.md)
 
 ### 常用库
 - [joblib 并行计算库](python/joblib.md)
