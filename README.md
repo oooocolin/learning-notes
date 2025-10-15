@@ -4,6 +4,7 @@
 # 目录
 ## 通用
 - [异常处理](common/exception.md) 
+- [闭包（closure）](common/closure.md) 
 
 ## Python
 ### 基础
