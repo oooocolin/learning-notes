@@ -4,7 +4,7 @@
 # 目录
 ## 通用
 - [异常处理](common/exception.md) 
-- [闭包（closure）](common/closure.md) 
+- [元编程](python/metaprogramming.md) 
 
 ## Python
 ### 基础
@@ -16,6 +16,7 @@
 - [项目规范](python/python-project-standard.md) 
 - [装饰器（decorator）](python/decorator.md) 
 - [描述符（descriptor）](python/descriptor.md) 
+- [元类（metaclass）](python/metaclass.md) 
 
 ### 常用库
 - [joblib 并行计算库](python/joblib.md) 
