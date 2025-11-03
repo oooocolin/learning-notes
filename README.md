@@ -4,8 +4,8 @@
 # 目录
 ## 通用
 - [异常处理](common/exception.md) 
+- [并发编程](common/concurrency-model.md) 
 - [元编程](common/metaprogramming.md) 
-- 
 
 ## Python
 ### 基础
