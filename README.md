@@ -6,6 +6,7 @@
 - [异常处理](common/exception.md) 
 - [并发编程](common/concurrency-model.md) 
 - [元编程](common/metaprogramming.md) 
+- [Lambda 表达式](common/lambda.md) 
 
 ## Python
 ### 基础
@@ -24,6 +25,7 @@
 
 ## C++
 ### 基础
+- [C++ 基础知识](cxx/cxx-basics.md) 
 
 ### 进阶
 
