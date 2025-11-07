@@ -3,6 +3,7 @@
 
 # 目录
 ## 通用
+- [面向对象编程的原则（SOLID 原则）](common/solid-principles.md) 
 - [异常处理](common/exception.md) 
 - [并发编程](common/concurrency-model.md) 
 - [元编程](common/metaprogramming.md) 
