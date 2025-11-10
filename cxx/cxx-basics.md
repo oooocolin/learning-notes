@@ -118,5 +118,41 @@ class Student {
 };
 ```
 以上的示例存在一个纯虚函数，不能实例化，是抽象类，但类中其他都是虚函数的实现，一般这种类都是作为基类，提供主线规范和默认实现。
+## 三、模板
+### 1. 概述
+模板用于编写与数据类型无关的代码，是 C++ 中实现泛型的基础，避免方法因为类型而多次重载，提高代码复用率。模板的背后原理是通过编译器根据传入类型生成具体函数的版本，在调用时调用具体的实现。模板分为函数模板和类模板。
+### 2. 语法结构
+函数模板：
+```cpp
+// 泛型函数模板
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
 
+int main() {
+    cout << add(2, 3) << endl;       // int
+    cout << add(2.5, 3.7) << endl;   // double
+}
+```
+类模板：
+```cpp
+template <typename T>
+class Box {
+    T value;
+public:
+    Box(T v) : value(v) {}
+    T get() { return value; }
+};
+
+int main() {
+    Box<int> intBox(10);      // T = int
+    Box<double> doubleBox(3.14);  // T = double
+
+    cout << intBox.get() << endl;
+    cout << doubleBox.get() << endl;
+}
+```
+### 3. 注意
+由于 C++ 模板是在编译器在编译期间静态创建模板实现的，所以模板不存在其他静态类型语言实现泛型的泛型擦除问题（由于 Java、C# 泛型是在编译期做类型检查，运行时将类型擦除为 Object 类型）。
 
