@@ -74,7 +74,85 @@ Student* stu1 = new Student();
 - 访问普通成员属性也是可以使用 `Student::id` ，实际上会等效于使用 `this -> id` ，但不推荐这么做。
 ### 4. 析构函数
 析构函数的主要职责是清理对象内部的资源，不是释放对象本身占用的内存，作用在于对象被销毁之前。形式为 `~` 符号跟上类名，如 `~Student()` 是无参无返回值（不是空值 `void`）的方法。
+### 5. 友元函数
+C++ 提供了一种灵活跳过类属性权限的解决方案——友元机制。利用 `friend` 关键字，我们可以将特定的函数或类声明为类的友元，这些函数或类就能够访问类的私有和受保护成员，即使它们不属于该类。
+```cpp
+// Student.h
+class Student {
+	friend int getId(Student* student);
+	...
+}
 
+// Syudent.cpp
+int getId(Student* student)
+{
+	return student->id;
+}
 
+// main.cpp
+Student* stu = new Student();
+std::cout << "stu's id: "<< getId(stu) << std::endl;
+```
+**注意**：
+- 从使用场景上，和其他现代语言的类的 Getter/Setter 方法相似。但是其他使用的是 Getter/Setter ，而不是沿用 C++ 的友元机制，这得追溯到 C++ 早期的设计理念。
+	- C++ 是在 C 语言基础上演化而来，目标是在不损失性能的情况下，引入类和抽象，遵循让程序员能精确控制封装的边界，而不是由语言强制的理念，所以诞生了临时打破原有封装的友元机制。
+	- 而现代语言选择的路线是受控访问、内部封装，设计得更为规范化。选择采用 “与其临时打破封装，不如提前定义清晰的访问通道” 的理念，通过 Getter/Setter 方法控制访问逻辑，而不是信任某个函数能访问私有变量，这也更为安全，也更易维护。也使得相比友元这种方法灵活性稍差一些，性能稍低一些（现代编译器下几乎无影响），代码层次多一些。
+- 友元函数常见的入参都是指针形式，这是因为一般友元函数常用于类之间的深度协作，这些一般使用指针传递。普通对象也可作为友元函数入参，若想兼得可以使入参为应用类型，如 `Student&` 。
+### 6. 虚函数
+虚函数允许派生类重写基类中的函数，从而在运行时通过基类指针或引用调用派生类的函数。需要在类方法或类方法的声明前加上 `virtual` 关键字，添加了这个关键字的函数则是虚函数，如果函数没有实现具体的逻辑则被成为纯虚函数（设置为 `= 0`）。C++ 的这个机制是用来实现运行时多态、实现抽象类和接口的，类内有实现的虚函数则可以实现运行时多态（普通的类继承只有编译多态，父类指针永远调用父类实现的方法），类内存在至少一个纯虚函数的就是抽象类，类内的方法全都是纯虚函数的被当作接口（因为 C++ 内没有 `interface` 关键字，这个本质上也还是抽象类）。
+```cpp
+class Student {
+	private:
+		int id;
+		string name;
+		
+	public:
+		// 虚函数
+		virtual void setData(int studentId, string studentName) {
+			id = studentId;
+			name = studentName;
+		}
+		
+		// 纯虚函数
+		virtual void display() = 0;
+};
+```
+以上的示例存在一个纯虚函数，不能实例化，是抽象类，但类中其他都是虚函数的实现，一般这种类都是作为基类，提供主线规范和默认实现。
+## 三、模板
+### 1. 概述
+模板用于编写与数据类型无关的代码，是 C++ 中实现泛型的基础，避免方法因为类型而多次重载，提高代码复用率。模板的背后原理是通过编译器根据传入类型生成具体函数的版本，在调用时调用具体的实现。模板分为函数模板和类模板。
+### 2. 语法结构
+函数模板：
+```cpp
+// 泛型函数模板
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
 
+int main() {
+    cout << add(2, 3) << endl;       // int
+    cout << add(2.5, 3.7) << endl;   // double
+}
+```
+类模板：
+```cpp
+template <typename T>
+class Box {
+    T value;
+public:
+    Box(T v) : value(v) {}
+    T get() { return value; }
+};
+
+int main() {
+    Box<int> intBox(10);      // T = int
+    Box<double> doubleBox(3.14);  // T = double
+
+    cout << intBox.get() << endl;
+    cout << doubleBox.get() << endl;
+}
+```
+### 3. 注意
+由于 C++ 模板是在编译器在编译期间静态创建模板实现的，所以模板不存在其他静态类型语言实现泛型的泛型擦除问题（由于 Java、C# 泛型是在编译期做类型检查，运行时将类型擦除为 Object 类型）。
 
