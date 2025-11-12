@@ -29,6 +29,13 @@
 - [C++ 基础知识](cxx/cxx-basics.md) 
 
 ### 进阶
+- [内存管理](cxx/cxx-memory-management.md) 
+- C++ 新特性
+	- [C++ 11](cxx/cxx-new-feature-11.md) 
+	- [C++ 14](cxx/cxx-new-feature-14.md) 
+	- [C++ 17](cxx/cxx-new-feature-17.md) 
+	- [C++ 20](cxx/cxx-new-feature-20.md) 
+	- [C++ 23](cxx/cxx-new-feature-23.md) 
 
 ### 常用库
 - [Opencv 计算机视觉库](cxx/opencv.md)
