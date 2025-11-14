@@ -21,16 +21,42 @@ auto ptr = std::make_unique<int>(10);
 auto f = [p = std::move(ptr)]() { return *p; };
 ```
 - 允许对 Lambda 表达式使用 `constexpr` 。
+## 自动返回类类型推导
+在 C++ 11 中，函数的返回值不能自动推导，除非显式使用尾置返回类型。
+```cpp
+auto func(...) -> return_type { ... }
+```
+但在 C++ 14 中解除了这个限制，允许使用 `auto` 推导返回类型。
+```cpp
+auto add(int a, int b) {
+    return a + b;    // 自动推导为 int
+}
+```
+注意：
+- 对于 Lambda 表达式可以书写返回值不同的形式，但对于函数而言使用 `auto` 类型必须唯一的返回类型。
+- `auto` 作为函数返回类型，遵循推导规则，所以在返回引用类型是并不会返回引用类型。
+```cpp
+int x = 100;
+int& ref() { return x; }
+
+auto f() {
+    return ref();    // auto 推导成 int，而不是 int&
+}
+```
+- 如果想返回引用类型，可以使用 `decltype(auto)` 。
+```cpp
+decltype(auto) f() {
+    return ref();    // 返回 int&
+}
+```
 
 
 
-## 二、`make_unique` 
+## `make_unique` 
 
-## 三、二进制字面量
+## 二进制字面量
 
-## 四、自动返回类类型推导
-
-## 五、constexpr 增强
+## constexpr 增强
 
 
 
