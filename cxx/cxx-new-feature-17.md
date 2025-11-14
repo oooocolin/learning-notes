@@ -93,25 +93,81 @@ auto s = std::any_cast<std::string>(a);
 - 需要动态内存，导致一定得性能降低。
 - 必须运行时检查类型，而不是在编译器确认，不够安全。
 - 可能抛异常。
+## 文件系统库
+### 简介
+C++ 17 引入了文件系统库 `<filesystem>` ，用于文件/目录操作、路径处理、递归遍历、文件状态查询等场景。提供了跨平台的路径 API（不用再写 `#ifdef Windows / Linux`），提高了安全性，提供了异常处理和明确返回值，替代旧的 C 系列的 API（`<cstdio>`, `system("mkdir")` 等）。
+### `path` 
+`std::filesystem::path` 表示文件路径。可以把 `path` 看成 C++ 的字符串+路径语义，它自动处理分隔符、拼接、文件名和扩展名解析。
+```cpp
+namespace fs = std::filesystem;
+
+fs::path p = "C:/Users/admin/data.txt";
+
+cout << p.filename();    // "data.txt"
+cout << p.stem();        // "data"
+cout << p.extension();   // ".txt"
+```
+### `exists` 
+`exists` 用于检查文件或目录是否存在。
+```cpp
+fs::path p = "test.txt";
+
+if (fs::exists(p)) {
+    cout << "File exists\n";
+}
+```
+### 创建和删除文件/目录
+创建目录
+```cpp
+fs::create_directory("data");
+fs::create_directories("a/b/c");    // 递归创建（一层层创建直到最后的目录）
+```
+删除目录/文件
+```cpp
+fs::remove("data/test.txt");        // 删除一个文件
+fs::remove_all("data");             // 删除整个目录
+```
+### 遍历目录
+`directory_iterator` 进行非递归遍历目录，`recursive_directory_iterator` 进行递归遍历目录（包含地址子目录内的内容）。
+```cpp
+for (auto& entry : fs::directory_iterator("data")) {
+    cout << entry.path() << endl;
+}
+
+for (auto& entry : fs::recursive_directory_iterator("data")) {
+    cout << entry.path() << endl;
+}
+```
+### 文件拷贝
+```cpp
+fs::copy("a.txt", "b.txt");
+```
+### 重命名/移动文件
+```cpp
+fs::rename("old.txt", "new.txt");
+```
+如果目标路径不同，即为移动操作。
+## 内联变量
+C++ 17 起，可以在全局或类内声明 inline 变量，它的可以在多个 `.cpp` 文件中重复定义（不会链接错误；链接时自动合并为一个实例（与 inline 函数一样）；适用于常量、全局变量、类静态成员等。
+```cpp
+inline int x = 10;
+```
+而在此前必须在头文件声明，并且使用 `extern` 关键字，然后再在源文件初始化。在 C++ 17 之后可以直接在头文件定义，并且在任意源文件引用时不会报重复定义，链接器会合并它们。并且类静态成员变量同样支持。
+```cpp
+// 其此前的写法
+// .h
+extern int counter;
+
+// .cpp
+int counter = 0;
+```
 
 
 
+## 并行算法
 
+## constexpr 进一步增强
 
-## 二、文件系统库
-
-## 三、内联变量
-
-
-
-
-
-## 六、并行算法
-
-## 七、constexpr 进一步增强
-
-## 八、字符串字面量改进
-
-
+## 字符串字面量改进
 
 
