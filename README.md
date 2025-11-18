@@ -16,7 +16,7 @@
 
 ### 进阶
 - [多任务](python/multitask.md) 
-- [项目规范](python/python-project-standard.md) 
+- [项目结构与包管理工具](python/python-project-standard.md) 
 - [装饰器（decorator）](python/decorator.md) 
 - [描述符（descriptor）](python/descriptor.md) 
 - [元类（metaclass）](python/metaclass.md) 
