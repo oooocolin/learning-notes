@@ -74,9 +74,10 @@ target_link_libraries(main PUBLIC ${OpenCV_LIBS})
 using namespace cv;
 ```
 ## 三、常用模块的操作
-### 1. 核心数据结构 `cv::Mat` 
+### 1. 核心模块 `core` 
+#### (1). 数据结构 `cv::Mat` 
 `cv::Mat` 是 `OpenCV` 最核心的图像容器，内部封装了图像的像素值、通道数、数据类型等常用信息。
-#### (1). 创建
+##### (i). 创建
 ```cpp
 Mat img1;    // 空图像
 Mat img2(640, 480, CV_8U, Scalar(0,0,255));    // 创建红色图像
@@ -86,13 +87,25 @@ Mat img3 = imread("image3.jpg", IMREAD_COLOR);    // 读取图像
 - `CV_8U` （8位无符号类型）、 `CV_8UC3` （3通道8位无符号类型）
 - `CV_32F` （32位浮点类型）、`CV_64F` （64位浮点类型）
 **注意**：`Mat` 的彩色图通道为 `BGR` 而不是 `RGB` ，所以一般在与其他库结合使用的时候需要注意转换。
-#### (2). 常用操作
+##### (ii). 常用操作
 ```cpp
 image.rows    // 行像素长度
 image.rows    // 行像素长度
 image.channels()    // 通道数
 image.at<Vec3b>(y, x); // 访问(x, y)处的像素值
 ```
+#### (2). 标准化 `cv::normalize` 
+```cpp
+void normalize(InputArray src, OutputArray dst, double alpha, double beta, int norm_type=NORM_L2, int dtype=-1, InputArray mask=noArray());
+```
+- `src`：输入矩阵或图像，可以是 `cv::Mat`、`cv::UMat`、`std::vector<float>` 等。
+- `dst`：输出矩阵或图像，可以与 `src` 相同，也可不同，取决于 `dtype` 的设置。
+- `alpha`：与 `norm_type` 模式有关。当模式是归一化类型 `NORM_MINMAX` 时，`alpha` 是归一化后的最小值；当模式是向量范数 `NORM_L2` 时，`alpha` 是归一化后的范数值。
+- `beta`：也与 `norm_type` 模式有关。当模式是归一化类型 `NORM_MINMAX` 时，`beta` 是归一化后的最大值；当是其他模式时，`beta` 被忽略，无意义。
+- `norm_type`：常见取值有 `NORM_INF` 无穷范数、`NORM_L1` L1范数、`NORM_L2` L2范数、`NORM_MINMAX` 映射到 `[alpha, beta]` 。
+- `dtype`：输出的目标类型，如 `CV_32F`、`CV_8U` 等，默认 `-1` 表示与输入类型一致。
+- `mask`：用于指定归一化的区域，只对 mask 中为 `1` 的元素进行归一化（不常用）。
+
 ### 2. 图像 `I/O` 与显示 `highgui` 
 - `imread`：读取图像；
 - `imwrite`：保存图像；
@@ -100,10 +113,30 @@ image.at<Vec3b>(y, x); // 访问(x, y)处的像素值
 ### 3. 图像处理 `imgproc` 
 #### (1). 色彩空间转换
 ```cpp
-// 色彩空间转换，其中 src 为原图像， dst 为转换目的图像
+// 色彩空间转换，src、dst 意义同上
 cvtColor(src, dst, COLOR_BGR2GRAY)
 ```
-#### (2). 滤波（以高斯滤波为例）
+#### (2). 阈值处理
+把像素值根据阈值条件转换为两类或多类，实现二值化或截断等效果。用于图像二值化、像素筛选、简单分割、去噪（如 Otsu、自适应阈值）等。
+```cpp
+double threshold(cv::InputArray src, cv::OutputArray dst,
+double thresh, double maxval, int type)
+```
+- `src`：输入图像通常要求单通道（灰度图），但也可以对每个通道独立处理多通道 Mat 。
+- `thresh`：阈值。含义取决于 `type` 的设置。
+- `maxval`：含义取决于 `type` 的设置。当是典型二值化 `THRESH_BINARY` 时，`maxval` 是大于阈值是输出的值；当是翻转二值化 `THRESH_BINARY_INV` 时，与 `THRESH_BINARY` 相反，`maxval` 是小于阈值输出的值；当是 `THRESH_OTSU`、`THRESH_TRIANGLE` 模式时，`maxval` 仍作为域上限使用。
+- `type`：阈值方法。具体如下：
+
+| type              | 效果说明                         |
+| ----------------- | ---------------------------- |
+| THRESH_BINARY     | src > thresh → maxval，否则 0   |
+| THRESH_BINARY_INV | src > thresh → 0，否则 maxval   |
+| THRESH_TRUNC      | src > thresh → thresh，否则保持原值 |
+| THRESH_TOZERO     | src > thresh → 原值，否则 0       |
+| THRESH_TOZERO_INV | src > thresh → 0，否则原值        |
+| THRESH_OTSU       | 忽略传入 thresh，由算法自动选           |
+| THRESH_TRIANGLE   | 同上，自动选 thresh                |
+#### (3). 滤波（以高斯滤波为例）
 ```cpp
 void GaussianBlur(src, dst, ksize, sigmaX, sigmaY, borderType);
 ```
@@ -116,7 +149,7 @@ void GaussianBlur(src, dst, ksize, sigmaX, sigmaY, borderType);
 	- `BORDER_REFLECT`: 反射边界。
 	- `BORDER_WRAP`: 用对面图像的像素填充边界。
 	- `BORDER_DEFAULT` 默认使用 `BORDER_REFLECT_101`。
-#### (3). 边缘检测（以 `Sobel` 算子为例）
+#### (4). 边缘检测（以 `Sobel` 算子为例）
 ```cpp
 void Sobel(src, dst, ddepth, dx, dy, ksize, scale, delta, borderType);
 ```
@@ -127,4 +160,23 @@ void Sobel(src, dst, ddepth, dx, dy, ksize, scale, delta, borderType);
 - `scale`：缩放导数的结果，默认为 `1` 即为不缩放。
 - `delta`：`Sobel` 核的大小，必须为奇数，默认值为 `0` 即为不进行偏移。
 - `borderType`：边界扩展类型，边界的处理方法，同上。
+#### (5). 检测与绘制轮廓
+##### (i). 检测轮廓
+```cpp
+void cv::findContours(InputOutputArray image, std::vector<std::vector<cv::Point>>& contours, std::vector<cv::Vec4i>& hierarchy, int mode, int method, Point offset = Point());
+```
+- `image`：输入/输出图像，`cv::findContours` 会修改图像，通常会先克隆一份。
+- `contours`：轮廓点集合，每条轮廓是一组点的 vector 。
+- `hierarchy`：层级关系。每个轮廓有四个参数 `[next, previous, first_child, parent]` 。
+- `mode`：轮廓检索模式。常用 `RETR_EXTERNAL`（只检索最外层轮廓）、`RETR_LIST`（检索所有轮廓，不建立层级关系）、`RETR_CCOMP`（检索所有轮廓，建立两层层级关系）、`RETR_TREE`（检索所有轮廓，建立完整层级结构）。
+- `mothod`：轮廓逼近方法。常用值 `CHAIN_APPROX_NONE`（所有点都存储）、`CHAIN_APPROX_SIMPLE`（压缩水平/垂直/对角线点，只保留端点，常用）、`CHAIN_APPROX_TC89_L1 / TC89_KCOS`（Teh-Chin 链逼近算法）。
+- `offset`：可选偏移量，会对输出的每个轮廓点加上 offset，用于多 ROI 情况下，方便映射回原图坐标。
+##### (ii). 绘制轮廓
+```cpp
+void cv::drawContours(InputOutputArray image, const std::vector<std::vector<cv::Point>>& contours, int contourIdx, const cv::Scalar& color, int thickness = 1, int lineType = LINE_8, const std::vector<cv::Vec4i>& hierarchy = std::vector<cv::Vec4i>(), int maxLevel = INT_MAX, cv::Point offset = cv::Point());
+```
+- `contourIdx` ：指定绘制哪条轮廓，`-1` 表示绘制所有轮廓。
+- `color`：绘制颜色，`cv::Scalar(B,G,R)` 或灰度值（单值）。
+- `thickness`：线宽（像素），`<0` 或 `FILLED` 表示填充轮廓。
+- `lineType`：绘制线型。常用 `LINE_8`（8-connected）、`LINE_4`（4-connected）、`LINE_AA`（抗锯齿线）。
 
