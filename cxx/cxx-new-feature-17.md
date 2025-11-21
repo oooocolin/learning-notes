@@ -161,9 +161,6 @@ extern int counter;
 // .cpp
 int counter = 0;
 ```
-
-
-
 ## 并行算法
 
 ## constexpr 进一步增强
