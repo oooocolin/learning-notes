@@ -4,7 +4,7 @@ tags:
   - cxx
   - opencv
 ---
-## 一、概述
+## 概述
 `OpenCV` 是一个开源的计算机视觉和机器学习软件库，广泛应用于图像处理、物体检测、机器学习等领域。其主要的模块包括：
 
 |      模块      |                        描述                        |
@@ -16,8 +16,8 @@ tags:
 | `Featured2d` |          特征检测，如 `SIFT`、 `SURF` 、 `ORB`           |
 |     `ML`     |              机器学习模块，如 `SVM` 、 `KNN`              |
 |    `DNN`     | 加载和运行深度学习模型的模块，支持 `TensorFlow` 、 `ONNX` 、`Caffe` |
-## 二、安装与配置
-### 1. 安装 `OpenCV`
+## 安装与配置
+### 安装 `OpenCV`
 #### (1). 使用包管理工具（如 `vcpkg`）
 ```shell
 # 克隆 vcpkg
@@ -51,7 +51,7 @@ vcpkg install opencv
 - 重新加载 `CMake` 项目；
 - 点击菜单栏 `构建 -> 构建项目` 执行构建项目，等待执行完成；
 - 生成的文件夹即为编译的文件，可以将这个文件夹复制到想要的其他文件夹，然后指定 `CMakeLists.txt` 文件内的 `OpenCV` 地址 `OpenCV_DIR` 为复制的地址。
-### 2. `CMake` 项目配置
+### `CMake` 项目配置
 如果 `OpenCV` 安装在默认地址，或是使用 `vcpkg` 包管理器安装的（在 `vcpkg\installed\` 文件夹里），只需在 `CMakeLists.txt` 配置查找 `OpenCV` ，并链接 `OpenCV` 库。
 ```cmake
 find_package(OpenCV REQUIRED)
@@ -66,15 +66,15 @@ find_package(OpenCV REQUIRED)
 target_link_libraries(main PUBLIC ${OpenCV_LIBS})
 ```
 **注意**：`Windows` 安装的预编译包指定 `OpenCV_DIR` 的地址路径需要为 `~/opencv/build/x64/vc16/lib` 而不是只指定在 `~/opencv/build/` 地址（ `~` 为安装时选择安装的地址，需自行填入）。
-### 3. 导入内容
+### 导入内容
 在需要使用的源文件导入头文件，可以选择使用命名空间简化模块的使用。
 ```cpp
 // 使用顶级头 也可以使用模块头 #include <opencv2/imgproc.hpp>等
 #include <opencv2/opencv.hpp>
 using namespace cv;
 ```
-## 三、常用模块的操作
-### 1. 核心模块 `core` 
+## 常用模块的操作
+### 核心模块 `core` 
 #### (1). 数据结构 `cv::Mat` 
 `cv::Mat` 是 `OpenCV` 最核心的图像容器，内部封装了图像的像素值、通道数、数据类型等常用信息。
 ##### (i). 创建
@@ -106,11 +106,11 @@ void normalize(InputArray src, OutputArray dst, double alpha, double beta, int 
 - `dtype`：输出的目标类型，如 `CV_32F`、`CV_8U` 等，默认 `-1` 表示与输入类型一致。
 - `mask`：用于指定归一化的区域，只对 mask 中为 `1` 的元素进行归一化（不常用）。
 
-### 2. 图像 `I/O` 与显示 `highgui` 
+### 图像 `I/O` 与显示 `highgui` 
 - `imread`：读取图像；
 - `imwrite`：保存图像；
 - `imshow`：显示窗口。
-### 3. 图像处理 `imgproc` 
+### 图像处理 `imgproc` 
 #### (1). 色彩空间转换
 ```cpp
 // 色彩空间转换，src、dst 意义同上
@@ -179,4 +179,3 @@ void cv::drawContours(InputOutputArray image, const std::vector<std::vector<cv::
 - `color`：绘制颜色，`cv::Scalar(B,G,R)` 或灰度值（单值）。
 - `thickness`：线宽（像素），`<0` 或 `FILLED` 表示填充轮廓。
 - `lineType`：绘制线型。常用 `LINE_8`（8-connected）、`LINE_4`（4-connected）、`LINE_AA`（抗锯齿线）。
-

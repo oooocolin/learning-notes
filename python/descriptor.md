@@ -3,10 +3,10 @@ title: 描述符
 tags:
   - python
 ---
-## 一、概述
+## 概述
 描述符（descriptor）是实现了 `__get__` 、 `__set__` 、 `__delete__` 方法中的一种或者是多种的类。其核心作用是用于拦截属性访问，类似于 TypeScript 的 `get` / `set` 方法的功能，只是在功能上更为灵活。
-## 二、语法结构
-### 1. 示例 1 （类型验证）
+## 语法结构
+### 示例 1 （类型验证）
 ```python
 class Typed:
     def __init__(self, name, expected_type):
@@ -29,7 +29,7 @@ class Person:
         self.name = name  # 自动验证类型
         self.age = age
 ```
-### 2. 示例 2 （带控制的缓存属性）
+### 示例 2 （带控制的缓存属性）
 ```python
 class CachedProperty:
     def __init__(self, func):
@@ -51,7 +51,7 @@ class CachedProperty:
         if hasattr(instance, f"_cached_{self.name}"):
             delattr(instance, f"_cached_{self.name}")
 ```
-### 3. 示例 3（Python 自带的 `@property` 实现方法进行属性的类似操作）
+### 示例 3（Python 自带的 `@property` 实现方法进行属性的类似操作）
 ```python
 class Person:
     def __init__(self):
@@ -67,12 +67,11 @@ class Person:
             raise ValueError("年龄无效")
         self._age = value
 ```
-## 三、局限性和使用场景
-### 1. 局限性
+## 局限性和使用场景
+### 局限性
 - 学习曲线陡峭：概念抽象，初学者难以理解。
 - 代码复杂度：简单的属性验证需要较多代码。
 - 调试困难：属性访问被拦截，调试时可能不直观。
 - 过度工程：简单场景下使用描述符可能显得"杀鸡用牛刀"。
-### 2. 使用场景
+### 使用场景
 目前由于主要功能还是对属性进行拦截操作，所以普通业务代码中较少直接使用，只是在一些 Django、SQLAlchemy 等大型框架中使用。并且描述符在很多场景被高级抽象替代，如 @`property`、数据类、第三方库替代，但仍然是 Python 元编程和框架开发的重要工具。
-

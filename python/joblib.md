@@ -5,13 +5,13 @@ tags:
   - multitask
   - joblib
 ---
-## 一、概述
+## 概述
 `joblib` 库是用于高效并行计算的库，其提供了许多简单易用的计算工具等。主要功能有：
 - 缓存计算结果，下次计算时直接调用减小重复计算；
 - 高效的序列化，对 `Numpy` 数组等大型的数据对象进行优化，加快序列化和反序列化的速度；
 - 使用并行计算，将任务拆分到多个进程或线程中执行，技术计算过程。
-## 二、缓存功能
-### 1. `Memory` 类
+## 缓存功能
+### `Memory` 类
 `Memory` 类将函数计算结果存储起来，以便在下次使用的时候直接调用。这有利于加速计算过程，节约资源。
 ```python
 class joblib.Memory(location=None, backend='local', mmap_mode=None, compress=False, verbose=1, bytes_limit=None, backend_options=None)
@@ -23,7 +23,7 @@ class joblib.Memory(location=None, backend='local', mmap_mode=None, compress=Fal
 - `verbose`：一个整数，表示日志的详细程度。`0` 表示没有输出，`1` 表示只输出警告，`2` 表示输出信息，`3` 表示输出调试信息。
 - `bytes_limit`：表示缓存使用的字节数限制。如果缓存超过了这个限制，最旧的缓存文件将被删除。
 - `backend_options`：传递给缓存后端的选项。一般不常用，一般用在 `backend` 支持的一些额外特性，通过此参数传入细节配置。
-### 2. 缓存的使用
+### 缓存的使用
 ```python
 memory = joblib.Memory("cache", verbose=0)  
   
@@ -40,12 +40,12 @@ def single_count(start, end):
 single_count(1, iterations)
 single_count(1, iterations)
 ```
-### 3. 清除缓存
+### 清除缓存
 ```python
 memory.clear(warn=True)
 ```
 这会将 `memory` 绑定的地址中的缓存被清除，注意文件夹内部不要存储其他内容以及文件。
-## 三、高效序列化
+## 高效序列化
 `joblib.dump()` 和 `joblib.load()` 提供了一种替代 `pickle` 库的方法，可以高效地序列化处理包含大量数据的任意 `Python` 对象，特别是大型的 `NumPy` 数组。尤其是 `pickle` 库无法直接序列化 `Numpy` 对象。
 ```python
 # 序列化数据
@@ -55,8 +55,8 @@ joblib.dump(dist_persist, filename)    # filename 保存的路径及文件名
 # 读取数据
 joblib.dump('dist_persist.joblib')
 ```
-## 四、并行计算
-### 1. `Parallel` 类
+## 并行计算
+### `Parallel` 类
 `Joblib` 库的 `Parallel` 类用于简单快速将任务分解为多个子任务，并分配到不同的CPU核心或机器上执行，从而显著提高程序的运行效率。
 ```python
 class joblib.Parallel(n_jobs=None, backend=None, return_as='list', verbose=0, timeout=None, batch_size='auto', pre_dispatch='2 * n_jobs', temp_folder=None, max_nbytes='1M', require=None)
@@ -77,7 +77,7 @@ class joblib.Parallel(n_jobs=None, backend=None, return_as='list', verbose=0, ti
 - `temp_folder`：指定临时文件的存储路径。（这并非使用 `joblib.Memory` 类实现，无法避免重复计算，只是避免大数据量在管道通信中爆内存或太慢）
 - `max_nbytes`：传递给工作程序的数组大小的阈值。（决定将数据存储到 `temp_folder` 内的阈值）
 - `require`：对运行任务的要求，可选 `None` 和 `sharedmem` 。`sharedmem` 表示将使用共享内存来执行并行任务，但会影响计算性能。
-### 2. `delayed`
+### `delayed`
 `Parallel` 类创建时不能直接接收执行函数和参数，而 `delayed` 专门用于把函数调用封装成可延迟执行的任务对象。其基本形式为 `delayed(func)(*args)` ，这相当于 `lambda` 表达式 `lambda: func(*args)` 该形式的简化。
 ```python
 # 单参数函数
@@ -87,7 +87,7 @@ delayed(square)(i) for i in range(10)
 delayed(slow_add)(a, b) for a, b in pairs
 delayed(slow_add)(*i) for i in pairs    # 解包元组作为入参
 ```
-### 3. 执行并行计算
+### 执行并行计算
 ```python
 def multi_process_pool_by_joblib():  
     batch = 8  
@@ -98,10 +98,6 @@ def multi_process_pool_by_joblib():
 		  
     return sum(result)
 ```
-
-
-
-
 
 
 

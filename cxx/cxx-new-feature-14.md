@@ -49,9 +49,6 @@ decltype(auto) f() {
     return ref();    // 返回 int&
 }
 ```
-
-
-
 ## `make_unique` 
 
 ## 二进制字面量
