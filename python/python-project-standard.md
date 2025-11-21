@@ -4,9 +4,9 @@ tags:
   - python
   - standard
 ---
-## 一、项目文件的结构
+## 项目文件的结构
 一般的 Python 项目在较小的时候都是堆放在一个项目文件夹内的，没有模块分层、没有明确职责的划分等，不利于管理日渐复杂的项目工程。一般常用或常见的是 `flat layout` 和 `src layout` 两种项目结构。
-### 1. `flat layout` 
+### `flat layout` 
 扁平布局 `flat layout` 将主代码包直接位于项目根目录下，项目模块与配置文件、测试文件等平级，结构相对简单直接，导入路径相对简洁，直接从包名开始 `from package_name import module1` ，更适合简单快速、部署相对简单的项目（`flat layout` 使用 `pytest` ，在 `site-packages` 没找到内容时，会根据 `import` 将 `package-name` 本地源码载入 `sys.path` 造成安装）。
 ```
 project-name/
@@ -29,7 +29,7 @@ project-name/
 	└── services/
         └── xxx_service.py
 ```
-### 2. `src layout` 
+### `src layout` 
 src 布局 `src layout` 将项目源代码放在一个 `src` 目录之下，将项目模块与配置文件、测试文件区隔开来，使得项目结构更为清晰，也更适合复杂部署测试的大型项目。
 ```
 project-name/
@@ -53,9 +53,9 @@ project-name/
 		└── services/
 	        └── xxx_service.py
 ```
-## 二、包管理工具、虚拟环境与构建工具
+## 包管理工具、虚拟环境与构建工具
 一般 Python 默认使用 `pip` 来进行包管理，并且推荐 `venv` 作为隔离的虚拟环境工具，但在一些场景，`anaconda` 、 `miniconda` 等使用更为广泛。
-### 1. 包管理工具与虚拟环境
+### 包管理工具与虚拟环境
 #### (1). `pip` 
 官方支持的包管理工具，使用更为方便，但是本身没有虚拟环境对各种包做隔离，一般在虚拟环境中配合使用。
 - 安装包：`pip install pkg-name` 
@@ -113,7 +113,7 @@ UV 、 Poetry 这类包管理工具从底层依然是使用 `pip` 和 `venv` ，
 - 执行代码（无需手动激活环境）：`uv run main.py` 
 #### (5). Pixi
 近期新兴的包管理工具，可兼容 Conda 生态。
-### 2. 构建工具
+### 构建工具
 Conda 的打包的 `.conda` 文件只能用于 Conda 生态，一般是用于上传到 channel 上，除此之外一般选择使用 UV、Poetry 此类打包为更轻量更易分享使用的 `.whl` 文件，可以兼容 `pip` 生态和 `conda` 生态。以下主要说的是 `.whl` 的打包和构建。  
 Python 的构建系统拆解为 frontend 和 backend ，用户使用命令行操作属于 frontend ，frontend  自行调用 backend 将代码打包成 `.whl` 文件。官方推荐的 frontend 为 `build` ，其默认使用的 backend 为 `setuptools` ，也可自行选择 UV、hatchling、LIT、Poetry 等第三方实现进行构建操作，他们之中有些只实现 frontend 和 backend 中的一个，有的都完成了实现。以下使用 `build` 和 `hatchling` 实现构建:
 - 在 `pyproject.toml` 配置 backend 为 `hatchling` ：
