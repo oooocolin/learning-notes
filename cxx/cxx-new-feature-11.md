@@ -147,8 +147,27 @@ struct Node {
     std::weak_ptr<Node> prev; // 防止循环引用
 };
 ```
-## 线程与并发
-
 ## constexpr
+### 概述
+constexpr 用于在编译期对变量、函数、构造函数进行求值，可以提高性能。并且可用于数组大小、模板参数等需要编译期常量的地方。
+### constexpr 变量
+```cpp
+constexpr int max_value = 100;
+int arr[max_value]; // 可以用作数组大小
+```
+- 必须初始化。
+- 值必须在编译期已知。
+- 只允许字面量类型（如 int、float、指针、数组、栈上对象）。
+### constexpr 函数
+```cpp
+constexpr int square(int x) {
+    return x * x;
+}
 
+constexpr int y = square(5); // 编译期求值
+```
+- 函数体只能有一条 return 语句。
+- 不允许循环、`if/else` 分支判断。
+- 函数参数和返回类型必须是字面量类型。
+## 线程与并发
 
