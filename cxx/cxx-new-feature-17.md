@@ -161,10 +161,25 @@ extern int counter;
 // .cpp
 int counter = 0;
 ```
+## constexpr 进一步增强
+C++ 17 在 C++ 14 基础上进一步增强，支持更灵活的分支语句，支持编译期 `if / switch` ；支持有限的 `try/catch` （不能抛异常）；允许 Lambda 表达式被 constexpr 修饰。
+```cpp
+constexpr auto f = [](int x) { return x * x; };
+static_assert(f(5) == 25, "Check failed");
+
+// 分支功能的增强
+template<typename T>
+constexpr void foo() {
+    if constexpr (std::is_integral_v<T>) {
+        // 编译期条件为 true，这段代码有效
+    } else {
+        // 编译期条件为 false，这段代码直接忽略，不会报错
+    }
+}
+```
+- C++ 17 开始支持类似 C++ 14 那样使用普通 `if` 一样使用 `switch` 。
+- C++ 17 支持的编译期 if ，也就是 `if constexpr (...) {}`  结构可视为是新的语法结构不是对 C++ 14 支持的 `if/else` 的增强，一般专门服务于模板的实现，`if constexpr` 不能将函数参数作为条件，而普通 if 支持。
 ## 并行算法
 
-## constexpr 进一步增强
-
 ## 字符串字面量改进
-
 

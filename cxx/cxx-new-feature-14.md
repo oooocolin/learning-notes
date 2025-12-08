@@ -49,11 +49,22 @@ decltype(auto) f() {
     return ref();    // 返回 int&
 }
 ```
+## constexpr 增强
+C++ 14 放宽了 constexpr 的限制，函数体允许多条语句，允许局部变量，允许循环、分支。
+```cpp
+constexpr int factorial(int n) {
+    int result = 1;
+    for (int i = 2; i <= n; ++i)
+        result *= i;
+    return result;
+}
+
+constexpr int f5 = factorial(5);  // 编译期计算 120
+```
+- 分支的条件必须在编译器求值。
+- 不支持 `switch` 进行分支判断。
+这样 constexpr 就可实现复杂的逻辑，基本上可以替代宏或模板元编程。
 ## `make_unique` 
 
 ## 二进制字面量
-
-## constexpr 增强
-
-
 
