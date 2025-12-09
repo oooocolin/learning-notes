@@ -22,6 +22,8 @@
 - [元类（metaclass）](python/metaclass.md) 
 
 ### 常用库
+- 标准库
+	- [asyncio 异步模块](python/asyncio.md) 
 - [joblib 并行计算库](python/joblib.md) 
 
 ## C++
