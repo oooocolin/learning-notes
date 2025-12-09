@@ -15,7 +15,7 @@ tags:
     await asyncio.sleep(1)
     print("World")
 ```
-## 事件循环（Event Loop）
+### 事件循环（Event Loop）
 事件循环是 `asyncio` 的核心组件，负责调度和执行协程。它不断地检查是否有任务需要执行，并在任务完成后调用相应的回调函数。
 ```python
 async def main():
