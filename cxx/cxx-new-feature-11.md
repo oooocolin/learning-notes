@@ -169,5 +169,10 @@ constexpr int y = square(5); // 编译期求值
 - 函数体只能有一条 return 语句。
 - 不允许循环、`if/else` 分支判断。
 - 函数参数和返回类型必须是字面量类型。
+## nullptr 关键字
+C++ 11 新增支持使用 nullptr 关键字，用于表示空指针，比使用字面值 “0” 或 “NULL” 更具类型安全性。nullptr 的类型是 `std::nullptr_t` ，`nullptr` 是语言字面量，可以直接使用。
+```cpp
+int *ptr = nullptr;
+```
 ## 线程与并发
 

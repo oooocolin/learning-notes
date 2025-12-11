@@ -28,7 +28,12 @@
 
 ## C++
 ### 基础
-- [C++ 基础知识](cxx/cxx-basics.md) 
+- [C++ 程序结构](cxx/cxx-program-structure.md) 
+	- 头文件与源文件
+	- 命名空间
+	- [类](cxx/cxx-class.md) 
+	- [模板](cxx/cxx-template.md) 
+- [C++ 的关键字与符号](cxx/cxx-keywords-and-symbols.md) 
 
 ### 进阶
 - [内存管理](cxx/cxx-memory-management.md) 
