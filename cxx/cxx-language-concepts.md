@@ -39,3 +39,41 @@ long b = reinterpret_cast<long>(a);
 int a = 10;
 float b = (float)a;
 ```
+## 未定义行为（UB）
+未定义行为（Undefined Behavior, UB）不是一个实现的细节，而是 C++ 语言规范的机制。UB 是指咋程序执行某些操作后，语言校准对结果不起任何作用，也不要求实现做任何的检查或报错。典型的就是空指针解引用、数组越界、除以0等操作，编译器不会作为编译错误，而是在执行时由操作系统或内存等硬件本身的保护触发异常。
+```cpp
+int *ptr = nullptr;
+int val = *ptr; 
+```
+C++ 这么做是从以下几个方面考虑的：
+- 提高性能，让编译器不必去进行各种检测，生成极为高效的代码。
+- 兼容硬件性能特性，比如有些 CPU 对整数溢出没有做统一定义。
+- 允许编译器避免增加运行时检查成本，如果都进行检查的话 C++ 的性能将不复存在。
+这么做也会带来一些问题就是错误直接落到硬件或 OS 层面容易崩溃。与其他语言，如 Java 运行时 JVM 进行安全检查，所以 Java 几乎没有 UB ，要么正确要么抛异常，不会随意崩溃。
+## 参数依赖查找（ADL）
+ADL（Argument-Dependent Lookup）是指参数依赖查找 ，也叫 Koenig Lookup（柯尼格查找）。它是 C++ 中函数调用名字查找规则的补充机制，就是编译器不仅会在当前作用域查找名字，还会根据实参类型所属于的命名空间，自动查找相应命名空间中的函数。
+```cpp
+namespace geometry {
+    struct Point {};
+    void draw(Point);
+}
+
+geometry::Point p;
+draw(p);
+```
+**说明**：
+- ADL 仅限定义在一个命名空间的函数和对象，若跨命名空间则 ADL 不会作用，比如结构体写在一个命名空间，而方法写在另一个，则查找不到。而且只作用于函数，对于类内部的函数不会进行查找。
+- ADL 对普通代码作用有限，如果调用点明确写了命名空间或使用 using namespace，ADL 不会增加好处。ADL 对泛型库和 operator 重载非常关键，STL、Boost、Eigen 等库广泛依赖 ADL 来实现可扩展性和封装。同时 ADL 可能引入二义性，这是设计者需要注意的副作用。
+## 符号重整
+符号重整（Name Mangling）是编译器对符号名字的改写/编码，目的是让链接器能够区分原本在源代码中名字相同的不同实体。
+```cpp
+namespace ns {
+    void foo(int);
+    void foo(double);
+}
+
+// 经过 Name Mangling，可能生成的符号
+_ZN2ns3fooEi      // foo(int)
+_ZN2ns3fooEd      // foo(double)
+```
+并且不同的编译器重整的风格不同，GCC、Clang、MSVC 都有自己的规则。所以在面对其他语言使用 C++ 的 DLL 无法识别函数名，因为都是 `_ZN2ns3fooEi` 或 `?foo@ns@@YAXH@Z` 的形式而无法调用，只能使用 `extern "C"` 导出 C 风格符号名（详见 [C++ 关键字与符号](cxx-keywords-and-symbols.md) 的 `extern` 关键字），即没有这些参数编码来确保正常调用，但是也就限制了不能导出 C++ 特性的接口，比如不能导出模板、命名空间、类（分别导出指针 + 函数，或结构体 + 函数）等。
