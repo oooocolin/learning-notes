@@ -175,4 +175,62 @@ C++ 11 新增支持使用 nullptr 关键字，用于表示空指针，比使用�
 int *ptr = nullptr;
 ```
 ## 线程与并发
+### 概述
+从 C++ 11 开始，标准库引入线程与并发支持。此前是由各平台单独维护，无法写跨平台的代码，没有语言级的内存模型，而 C++ 11 开始正式支持。
+### 核心组成
+#### (1). 语言级内存模型
+C++11 定义了线程、原子操作、数据竞争等语义，规定编译器和 CPU 的指令重排规则，保障多线程语义可预测，得以安全地实现并发机制。之后的所有库都基于此设计。
+#### (2). 线程与并发运行时库
+##### (i). `std::thread` 
+`std::thread` 用于创建线程，线程对象支持 `join()` 进行阻塞等待，`detach()` 后台运行等功能。
+```cpp
+void work() {}
 
+int main() {
+    std::thread t(work);
+    t.join(); // 等待线程执行结束
+}
+```
+##### (ii). `std::mutex` / `std::lock_guard` / `std::unique_lock` 
+`std::mutex` 是互斥量，是最基础的锁。需要手动上锁和解锁。配合 `std::lock_guard` 和 `std::unique_lock` 可对互斥量进行管理不用手动上锁和解锁。
+```cpp
+std::mutex m;
+
+void f() {
+    std::lock_guard<std::mutex> lg(m); // 自动上锁/释放
+    // 临界区
+}
+```
+##### (iii). `std::condition_variable` 
+`std::condition_variable` 是条件变量，用于线程等待事件，让线程在满足某个条件之前处于阻塞状态。
+```cpp
+std::mutex m;
+std::condition_variable cv;
+bool ready = false;
+
+void f() {
+    std::unique_lock<std::mutex> lk(m);
+    cv.wait(lk, []{ return ready; });
+}
+```
+##### (iv). `std::future` / `std::promise` / `std::async` 
+`std::async` 用于启动异步任务，进行简化多线程编程，使得不用手动管理线程的创建、同步等细节。具体来说，`std::async` 会在后台启动一个线程来执行一个函数，并允许你在未来某个时刻获取它的结果。
+```cpp
+std::future<T> std::async(std::launch::policy, callable&& f, Args&&... args);
+```
+- `std::launch::policy`：指定异步执行策略的枚举，常见的有：
+    - `std::launch::async`：强制在新的线程中异步执行。
+    - `std::launch::deferred`：延迟执行，直到调用 `get()` 或 `wait()` 时才会执行任务。此时任务将在当前线程中执行。
+    - `std::launch::async | std::launch::deferred`：系统决定任务应该在哪个线程中执行。
+- `callable`：希望异步执行的可调用对象（比如函数指针、lambda 表达式等）。
+- `args` 是传递给 `callable` 的参数。
+**说明**：虽说在名称上是异步，但是这并不是现代意义上的 async/await 型异步。`launch::async` 实际上就是创建新线程并行执行，而 `launch::deferred` 是使用延迟执行的伪异步，并不具备并发性。也就是说此异步只是语义上的 `std::future` 并不是非阻塞 IO / 事件驱动协作式异步。直到 C++ 20 增加了协程机制，才带来了真正的语言级异步机制，才能实现现代意义上的异步。但是截止 C++ 23 仍未提供官方的异步 API ，目前仍是第三方实现。`std::async` 更像一个“轻量级的、不可调优的、实现自带的小线程池或线程管理器”，而不是现代意义上的异步系统。
+#### (3). 原子操作
+C++11 标准化了 CPU 层级的 无锁原子操作。支持原子读写，原子加减/交换，内存序语义，lock-free 判断。atomic 是现代高性能并发（lock-free / wait-free）的基础。
+```cpp
+std::atomic<int> counter{0};
+
+void f() {
+    counter.fetch_add(1);
+}
+```

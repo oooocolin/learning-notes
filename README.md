@@ -34,6 +34,7 @@
 	- [类](cxx/cxx-class.md) 
 	- [模板](cxx/cxx-template.md) 
 - [C++ 的关键字与符号](cxx/cxx-keywords-and-symbols.md) 
+- [C++ 语言概念](cxx/cxx-language-concepts.md) 
 
 ### 进阶
 - [内存管理](cxx/cxx-memory-management.md) 
