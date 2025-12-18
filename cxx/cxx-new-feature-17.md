@@ -180,6 +180,67 @@ constexpr void foo() {
 - C++ 17 开始支持类似 C++ 14 那样使用普通 `if` 一样使用 `switch` 。
 - C++ 17 支持的编译期 if ，也就是 `if constexpr (...) {}`  结构可视为是新的语法结构不是对 C++ 14 支持的 `if/else` 的增强，一般专门服务于模板的实现，`if constexpr` 不能将函数参数作为条件，而普通 if 支持。
 ## 并行算法
+### 概述
+C++ 17 把是否并行执行从算法实现中剥离出来，交给调用者声明。在 C++ 17 以前，要并行得自己建线程池或普通线程 `std::thread` ，算法与并行策略强耦合，很难复用和泛化。C++17 引入的并行算法是算法层面的抽象升级，不是线程库升级。
+### 三种策略
+```cpp
+#include <execution>
 
+std::execution::seq       // 顺序执行（默认）
+std::execution::par       // 并行执行
+std::execution::par_unseq // 并行 + 向量化（最激进）
+```
+### 使用方法
+算法名字没变，只是多了一个执行策略参数。
+```cpp
+// 旧写法
+std::sort(v.begin(), v.end());
+
+// 并行算法
+std::sort(std::execution::par, v.begin(), v.end());
+```
+支持范围不是所有的 STL 算法。典型支持的包括：
+- `for_each`
+- `transform`
+- `reduce`
+- `accumulate`（并行版本推荐 `reduce`）
+- `sort`
+- `count`
+- `find`
+- `copy`
+但以下不保证支持：
+- 会修改容器结构的算法
+- 有强顺序依赖的算法
+### 约束
+使用 `par / par_unseq` 时，不能有数据竞争，不能依赖元素处理顺序，lambda 必须是无副作用，或副作用是线程安全的。
+```cpp
+// 错误示例
+int sum = 0;
+std::for_each(std::execution::par, v.begin(), v.end(),
+              [&](int x) { sum += x; }); // 数据竞争
+```
+`std::for_each(std::execution::par, ...)` 处理顺序未定义，即使在同一平台，每次运行也可能不同。
+### 缺陷
+`std::execution` 仅作为 STL 算法是否并行的声明方式，并不是像是 `std::thread` 一样的直接作用于线程并发的实现。而且 C++ 17 标准只规定 “可以并行” ，不规定 “如何并行” ，也就是只进行接口的标准化，而没有进行实现的标准化，具体实现是靠编译器实现，而在很多编译器，如 libstdc++（GNU GCC） / libc++（LLVM/Clang） 的现实情况，要么是空实现，要么只在极少算法中生效，要么依赖第三方后端（TBB、OpenMP），导致你写了并行代码，但跑起来像没写一样。所以整体可用性不高。
 ## 字符串字面量改进
+C++ 17 对字符串字面量改进主要有两方面。
+### `std::string_view` 
+#### (1). 概述
+这是一个非拥有型字符串视图，本质是：`(const char*, size_t)` 。在 C++ 17 前，函数使用字符串字面量常见写法如下。
+```cpp
+void foo(const std::string& s);
+```
+但存在不能直接接收字符串字面量（意味着其实是对 `char[]` 类型对象做了一次向 `std::string` 的类型转化）、可能发生临时 `std::string` 构造、不必要的内存分配的问题。因为编译器会做隐式转换 `foo(std::string("hello"));` ，会创建临时 `std::string` 对象，再将临时对象绑定到 `const std::string&` 上，造成性能浪费和容易形成悬空引用（临时对象生命周期有限，如果你把引用存储在全局或延迟使用），而基础类型字面量开销非常小。
+#### (2). 使用方法
+```cpp
+void foo(std::string_view s);
 
+foo("hello");
+foo(std::string("world"));
+```
+这样可以实现零拷贝、零分配。并且 `std::string_view` 可以直接引用它。因为本质而言，这只是一个指针 + 长度的包装器，本身的构造是寄存器拷贝，它不拥有内存，和 `new` 创建对象不一样。
+```cpp
+std::string_view sv = "hello";
+```
+### `constexpr` 字符串操作的增强（有限）
+C++ 17 开始一些字符串相关操作可在 `constexpr` 上下文中使用但 `std::string` 仍然不能完整 constexpr，真正的 `constexpr std::string` 要到 C++ 20 。
