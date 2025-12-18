@@ -119,11 +119,12 @@ std::vector<int> v2 = std::move(v1);
 ```cpp
 #include <memory>
 
-std::unique_ptr<A> p1 = std::make_unique<A>();
+std::unique_ptr<A> p1 = std::unique_ptr<A>(new A());
 // std::unique_ptr<A> p2 = p1; // 错误，不能拷贝
 std::unique_ptr<A> p3 = std::move(p1); // 移动所有权
 ```
-**使用场景**：局部对象、树结构、资源独占管理等。
+**使用场景**：局部对象、树结构、资源独占管理等。  
+**注意**：C++ 11 支持的创建独占式指针的方法并不安全，必须等到 C++ 14 后支持使用 `std::make_unique<A>()` 进行安全地创建。
 #### (2). 共享式指针
 共享式指针 `std::shared_ptr<T>` ，同一时刻可以有多个指针指向同一个对象。该指针内部维护一个引用计数，最后一个离开作用域时自动销毁资源。
 ```cpp
