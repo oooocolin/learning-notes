@@ -47,7 +47,8 @@
 	- [C++ 23](cxx/cxx-new-feature-23.md) 
 
 ### 常用库
-- [Opencv 计算机视觉库](cxx/opencv.md)
+- [标准库](cxx/cxx-standard-library.md) 
+- [Opencv 计算机视觉库](cxx/opencv.md) 
 
 ## AI
 ### LLM
