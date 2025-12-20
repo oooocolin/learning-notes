@@ -38,6 +38,7 @@
 
 ### 进阶
 - [内存管理](cxx/cxx-memory-management.md) 
+- [C++ 惯用法](cxx/cxx-idioms.md) 
 - [预处理器与宏](cxx/cxx-preprocessor-macro.md) 
 - C++ 新特性
 	- [C++ 11](cxx/cxx-new-feature-11.md) 
