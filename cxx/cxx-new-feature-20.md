@@ -176,7 +176,76 @@ int main() {
 }
 ```
 这样就不需要使用 `#include` ，也不需要有头文件，也没有宏泄漏。只是在一些官方库和第三方库支持还需后续支持，所以目前头文件的方式使用仍然广泛。但是目前也有了头单元，对现有头文件做了模块化封装，把现有的头文件当做模块导入，这样就不会重复解析整个头文件，比如 `import <vector>` 、`import <string>` 。
-## Coroutines
+## 协程 Coroutines
+### 概述
+C++ 20 此前的仅能支持线程并行和 `future/promise` 的伪异步执行，但是其实并没有实现现代意义的异步，不是线程内挂起和恢复。C++ 20 支持的协程就能补足此前的缺陷。
+### 核心结构
+- `co_await`：暂停当前函数，等待一个 awaitable 对象完成，用于异步执行。
+- `co_yield`：暂停当前函数，将一个值返回给调用者，用于生成器。
+- `co_return`：协程完成时返回最终结果。
+- 协程句柄（handle）：编译器生成一个对象保存状态机，用于 resume / destroy 协程。
+### 语法示例
+由于 C++ 官方只是提供了协程语言特性上的支持，但是生成器等需要自己实现或是第三方库实现，目前有开源库 `cppcoro` 提供 `generator<T>` 和 `task<T>` 以及 `folly` / `libunifex`是 Facebook 和 Microsoft 提供的更高级协程工具使用。简易的生成器实现思路如下。
+```cpp
+#include <coroutine>
+#include <optional>
+#include <iostream>
 
+template<typename T>
+struct Generator {
+    struct promise_type {
+        std::optional<T> current_value;
+		
+        Generator get_return_object() {
+            return Generator{std::coroutine_handle<promise_type>::from_promise(*this)};
+        }
+		
+        std::suspend_always initial_suspend() { return {}; }
+        std::suspend_always final_suspend() noexcept { return {}; }
+		
+        std::suspend_always yield_value(T value) {
+            current_value = value;
+            return {};
+        }
+		
+        void return_void() {}
+        void unhandled_exception() { std::exit(1); }
+    };
+	
+    std::coroutine_handle<promise_type> handle;
+	
+    Generator(std::coroutine_handle<promise_type> h) : handle(h) {}
+    ~Generator() { if (handle) handle.destroy(); }
+	
+    bool next() {
+        if (!handle.done()) {
+            handle.resume();
+        }
+        return !handle.done();
+    }
+	
+    T value() {
+        return *handle.promise().current_value;
+    }
+};
+
+// 使用示例
+Generator<int> numbers(int n) {
+    for (int i = 0; i < n; ++i) {
+        co_yield i;
+    }
+}
+
+int main() {
+    auto gen = numbers(5);
+    while (gen.next()) {
+        std::cout << gen.value() << "\n";
+    }
+}
+```
+### 协程的底层机制
+- 把函数拆成状态机，每个 `co_await` / `co_yield` 是一个挂起点，编译器生成隐藏成员变量存储局部变量和当前位置。
+- 生成句柄 / promise_type ，用于控制 `resume` / `destroy` / 获取返回值，`promise_type` 定义协程生命周期和交互方式。
+所以协程本质上就是由编译器生成状态机实现函数可暂停，句柄和 `promise_type` 提供接口实现外部控制协程。
 ## 强化 lambda
 
