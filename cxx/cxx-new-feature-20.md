@@ -99,9 +99,58 @@ constexpr int* create_array(int n) {
 
 constexpr auto arr = create_array(5);  // C++20 才允许
 ```
-## 模块化
-
 ## 三路比较符（`<=>`）
+### 概述
+三路比较符 `<=>` ，用于提供一种方式，以要求编译器为某个类生成相一致的关系运算符，专用于类由编译器生成的运算符。此前的仅单独的进行操作符进行操作上的保证，如下。
+```cpp
+struct A {
+    int x;
+};
+
+bool operator<(const A& a, const A& b) {
+    return a.x < b.x;
+}
+```
+虽然写了 `<` ，但实际上，`==` 、 `>` 、 `<=` 、`>=` 也要写，且一致性完全靠人为保证。现在可以使用三路比较符一次性确定，并且不再回答比较结果的真假，而是返回 “小于 / 大于 / 等于” 的比较结果对象。
+### 比较结果对象
+|类型|适用场景|说明|
+|---|---|---|
+|`std::strong_ordering`|整型、字符串|全序、等价即相等|
+|`std::weak_ordering`|忽略某些字段的排序|等价 ≠ 相等|
+|`std::partial_ordering`|浮点数|存在“不可比”（NaN）|
+以上是标准定义的三种比较类别，以整型、字符串类别比较为例，其比较结果对象如下。
+```cpp
+std::strong_ordering::less
+std::strong_ordering::equal
+std::strong_ordering::greater
+```
+### 实现
+一个最基本的 `<=>` 实现如下，这是使用编译器自动生成比较结果方法。
+```cpp
+#include <compare>
+
+struct A {
+    int x;
+	
+    auto operator<=>(const A&) const = default;
+};
+```
+- 生成 `<` 、 `<=` 、 `>` 、 `>=` 、 `==` 、 `!=` 。
+- 返回类型自动推导为 `std::strong_ordering` 。
+也可以显式实现。
+```cpp
+struct A {
+    int x;
+	
+    std::strong_ordering operator<=>(const A& other) const {
+        if (x < other.x) return std::strong_ordering::less;
+        if (x > other.x) return std::strong_ordering::greater;
+        return std::strong_ordering::equal;
+    }
+};
+```
+**注意**：初期 C++ 20，只定义 `<=>` 的话，不会自动生成 `==` ，到了 C++ 20 最终标准中已经补齐了这一点，也可以通过三路比较符来进行生成。
+## 模块化
 
 ## Coroutines
 
