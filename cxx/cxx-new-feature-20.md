@@ -40,16 +40,17 @@ T add(T a, T b) requires Addable<T> {
 }
 ```
 ### 标准库支持 Concepts
-| Concept                         | 说明         |
-| ------------------------------- | ---------- |
-| `std::integral<T>`              | T 是整型      |
-| `std::floating_point<T>`        | T 是浮点型     |
-| `std::signed_integral<T>`       | 有符号整数      |
-| `std::unsigned_integral<T>`     | 无符号整数      |
-| `std::same_as<T, U>`            | T 与 U 类型相同 |
-| `std::assignable_from<T, U>`    | 可以赋值       |
-| `std::default_initializable<T>` | 可默认构造      |
-| …                               | …          |
+| Concept                         | 说明            |
+| ------------------------------- | ------------- |
+| `std::integral<T>`              | T 是整型         |
+| `std::floating_point<T>`        | T 是浮点型        |
+| `std::signed_integral<T>`       | 有符号整数         |
+| `std::unsigned_integral<T>`     | 无符号整数         |
+| `std::derived_from<T, U>`       | T 是 U 类或U类派生类 |
+| `std::same_as<T, U>`            | T 与 U 类型相同    |
+| `std::assignable_from<T, U>`    | 可以赋值          |
+| `std::default_initializable<T>` | 可默认构造         |
+| …                               | …             |
 ## Ranges
 ### 概述
 此前，STL 的算法通常依赖迭代器区间。算法参数是迭代器，不直观，用户需要手动传入 `.begin()` / `.end()` ，进行链式操作很困难，且语义不够贴近 “集合/范围” 的概念。
@@ -66,9 +67,27 @@ std::vector<int> v = {1,2,3};
 auto r = v;  // v 本身就是 range
 ```
 #### (2). View（视图）
-
-
-
+视图是轻量、非拥有型范围，不拷贝底层数据，懒求值（按需计算）。其典型操作有 `filter` / `transform` / `take` / `drop` 。
+```cpp
+std::vector<int> v = {1,2,3,4,5};
+auto evens = v | std::views::filter([](int x){ return x % 2 == 0; }); // {2, 4}
+```
+- `evens` 是视图，没有创建新容器。
+- 底层直接引用 `v` 数据。
+#### (3). Adapter（适配器）
+Range 可以通过适配器组合操作，进行变换、筛选操作。
+```cpp
+auto r = v 
+         | std::views::filter([](int x){ return x % 2 == 0; })
+         | std::views::transform([](int x){ return x*x; });
+```
+- 链式调用，懒求值。
+- 只有在遍历（`for` / `copy` / `accumulate`）时才真正计算。
+### 使用
+这样就不用分别传入迭代器，直接使用尤其是 STL 算法中，比如排序。
+```cpp
+std::ranges::sort(v);
+```
 ## constexpr 再增强
 C++ 20 支持在 constexpr 实现动态内存分配（`new/delete`），允许完整的 `try/catch`，允许虚函数，允许容器在编译期创建（元素是字面量类型），支持所有 STL 算法的执行。
 ```cpp
