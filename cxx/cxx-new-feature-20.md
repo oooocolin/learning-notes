@@ -151,7 +151,31 @@ struct A {
 ```
 **注意**：初期 C++ 20，只定义 `<=>` 的话，不会自动生成 `==` ，到了 C++ 20 最终标准中已经补齐了这一点，也可以通过三路比较符来进行生成。
 ## 模块化
+C++ 20 更新的模块化是对 C++ 构建模型的结构性修复，目标是解决传统宏的 `#include` 导入方式的问题。传统 `#include` 并不是 “模块” ，而是简单的文本替换，没有语义边界，并且会造成宏污染、重复解析、头文件链极深等问题。模块使用 `export/import` 进行，语义导入，一次编译多次导入，并且在编译器就可被感知。
+```cpp
+// math.cppm
+export module math;
 
+export int add(int a, int b);
+```
+
+```cpp
+// math.cpp
+module math;
+
+int add(int a, int b) {
+    return a + b;
+}
+```
+
+```cpp
+import math;
+
+int main() {
+    return add(1, 2);
+}
+```
+这样就不需要使用 `#include` ，也不需要有头文件，也没有宏泄漏。只是在一些官方库和第三方库支持还需后续支持，所以目前头文件的方式使用仍然广泛。但是目前也有了头单元，对现有头文件做了模块化封装，把现有的头文件当做模块导入，这样就不会重复解析整个头文件，比如 `import <vector>` 、`import <string>` 。
 ## Coroutines
 
 ## 强化 lambda
