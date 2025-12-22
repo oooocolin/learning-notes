@@ -247,5 +247,56 @@ int main() {
 - 把函数拆成状态机，每个 `co_await` / `co_yield` 是一个挂起点，编译器生成隐藏成员变量存储局部变量和当前位置。
 - 生成句柄 / promise_type ，用于控制 `resume` / `destroy` / 获取返回值，`promise_type` 定义协程生命周期和交互方式。
 所以协程本质上就是由编译器生成状态机实现函数可暂停，句柄和 `promise_type` 提供接口实现外部控制协程。
-## 强化 lambda
+## 强化 Lambda
+C++ 20 在此前版本 Lambda 支持的基础上进行以下增强。
+- 模板化 Lambda（带约束）的支持。
+```cpp
+auto add = []<std::integral T>(T a, T b) {
+    return a + b;
+};
+```
+- Lambda 可以是 `constexpr` 。C++17 的 Lambda 也可以 `constexpr`，但 C++ 20 更加统一，特别是配合模板参数。
+```cpp
+constexpr auto square = [](int x) { return x*x; };
+static_assert(square(5) == 25);
+```
+- 支持结构化绑定初始化捕获。更直观地处理复杂对象的捕获，减少中间变量。
+```cpp
+std::pair<int,int> p{1,2};
+auto f = [a = p.first, b = p.second]() { return a+b; };
+```
+- `this` 捕获增强。以前只能捕获 `this` 指针（引用），现在可以捕获副本，避免悬空引用问题。
+```cpp
+struct S {
+    int x = 10;
+    auto f() {
+        return [*this]() { return x; }; // 捕获整个对象副本
+    }
+};
+```
+## consteval
+consteval 要求必须在编译期求值，也被称为立即函数。相比于相比 constexpr，constexpr 可以在编译期或运行期求值，consteval 强制编译期求值。
+```cpp
+constexpr int add(int a, int b) {
+    return a + b;
+}
+
+consteval int square(int x) {
+    return x * x;
+}
+
+int main() {
+    constexpr int result1 = add(3, 4);   // 编译期求值
+    int result2 = add(5, 6);             // 运行时求值
+    constexpr int result3 = square(7);   // 编译期求值
+}
+```
+constexpr 适用于常量表达式计算；模板参数初始化；编译期数组大小；lambda、循环、复杂类型计算。consteval 适用于编译期 ID / hash 生成；枚举值生成；模板元编程；强制生成编译期常量，避免运行期开销。
+
+
+
+
+
+
+
 
