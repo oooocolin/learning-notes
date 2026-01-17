@@ -17,10 +17,14 @@ tags:
 - [原型模式](design-pattern-prototype.md) 
 - [建造者模式](design-pattern-builder.md) 
 ### 结构型
-- [适配器模式](design-pattern-adapter.md) 
-- [装饰器模式](design-pattern-decorator.md) 
-- [代理模式](design-pattern-proxy.md) 
-- [组合模式](design-pattern-composite.md) 
-
+- [适配器、桥接与外观模式](dp-adapter-bridge-facade.md) 
+- [代理模式与装饰器模式](dp-proxy-decorator.md) 
+- [组合模式、享元模式](dp-composite-flyweight.md) 
 ### 行为型
+- [策略模式和状态模式](dp-strategy-status.md) 
+- [责任链模式和备忘录模式](dp-chain_of_resp-memento.md) 
+- [观察者模式、中介模式、访问者模式](dp-observer-mediator-visitor.md) 
+
+
+
 
