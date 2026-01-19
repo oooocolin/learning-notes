@@ -24,6 +24,8 @@ tags:
 - [策略模式和状态模式](dp-strategy-status.md) 
 - [责任链模式和备忘录模式](dp-chain_of_resp-memento.md) 
 - [观察者模式、中介模式、访问者模式](dp-observer-mediator-visitor.md) 
+- [命令模式、迭代器、解释器](dp-command-iterator-interpreter.md) 
+- [模板方法模式](design-pattern-template.md) 
 
 
 
