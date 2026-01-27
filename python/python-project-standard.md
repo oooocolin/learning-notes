@@ -53,6 +53,29 @@ project-name/
 		└── services/
 	        └── xxx_service.py
 ```
+### 注意
+在工程中常见到 `__init__.py` 、`__main__.py` 、`run.py` 等文件。
+
+对于 `__init__.py` 而言，最早是为了使得目录能被 Python 识别为一个包，使得 Python 能通过 `import package-name` 导入其中的模块（在 Python 3.3 之后无需这个文件也能识别为 Python 包）。并且若在 `__init__.py` 导入模块 `from .modules.xxx_module import func1` ，就能使得导入包 `import package-name` 后，用户就可以直接在顶层 `package-name.func1()` 调用。换句话说，`__init__.py` 更像提供一个显式 API 界面，而不是进行访问控制。
+
+`__main__.py` 是为了让整个包可执行，使得进行命令行操作 `python -m package-name` 能够执行，如果没有这个文件就会报错。但这个不是必须的只有在需要包可执行的时候需要它，或是只是想导入，又或是可以使用 `run.py` 启动。
+
+`run.py` 文件通常是项目单独的启动脚本，一般是放在项目目录而不是模块目录。此文件一般是用于内部开发调试使用，而 `__main__.py` 更偏向标准入口，一般用于发布的工具库。但两者并不直接冲突，开源项目通常两者都有。如果是内部使用可能跟偏向 `run.py` ，因为发布和命令执行不是首要要求，而且 `run.py` 更为灵活。
+```
+myproject/
+│
+├── mypackage/
+│   ├── __init__.py       # 包初始化
+│   ├── __main__.py       # 包执行入口
+│   ├── module1.py
+│   └── module2.py
+│
+├── run.py                # 开发/调试启动
+├── requirements.txt
+└── setup.py
+```
+
+对于 `setup.py` 文件，是此前打包和安装依赖的文件。而现代使用 UV 、Poetry 通过 `pyproject.toml` 进行管理，这里不做详细说明，而是简易说明。
 ## 包管理工具、虚拟环境与构建工具
 一般 Python 默认使用 `pip` 来进行包管理，并且推荐 `venv` 作为隔离的虚拟环境工具，但在一些场景，`anaconda` 、 `miniconda` 等使用更为广泛。
 ### 包管理工具与虚拟环境
