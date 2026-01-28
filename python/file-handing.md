@@ -48,11 +48,11 @@ Python 使用 `os.rename(full_path, new_name_path)` 对文件进行重命名。
 ## 获取目录
 ```
 my_directory/
-|
+│
 ├── sub_dir/
-|   ├── bar.py
-|   └── foo.py
-|
+│   ├── bar.py
+│   └── foo.py
+│
 ├── file1.py
 ├── file2.csv
 └── file3.txt

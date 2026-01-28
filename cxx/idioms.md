@@ -35,7 +35,7 @@ arr[0] = 42;
 // 后续无需自己释放资源，在离开作用域后自动释放
 ```
 ## 零三五法则
-详见 [C++ 类零三五法则](cxx-class.md#零三五法则) 。
+详见 [C++ 类零三五法则](class.md#零三五法则) 。
 ## PImpl（指向实现的指针）惯用法
 ### 概述
 这种惯用法将类的实现细节与其接口分离，从而加快编译速度，并允许在不影响客户端的情况下更改实现。PImpl 在工程上是为了解决头文件依赖，避免任何改变都导致级联重编译。
@@ -114,7 +114,7 @@ class MyClass : private NonCopyable {、
 };
 ```
 ## Erase-remove（擦除-删除）惯用法
-擦除删除惯用法是一种常见的 C++ 技术，用于高效地从容器中删除元素，特别是从标准序列容器（如 `std::vector` 、`std::list` 和 `std:::deque` ）中删除元素。具体而言是使用标准库算法 `std::remove` 以及容器的 `erase()` 方法。相关信息 [STL 算法修饰序列](cxx-standard-library.md#修饰序列) 。
+擦除删除惯用法是一种常见的 C++ 技术，用于高效地从容器中删除元素，特别是从标准序列容器（如 `std::vector` 、`std::list` 和 `std:::deque` ）中删除元素。具体而言是使用标准库算法 `std::remove` 以及容器的 `erase()` 方法。相关信息 [STL 算法修饰序列](standard-library.md#修饰序列) 。
 ```cpp
 std::vector<int> numbers = {1, 3, 2, 4, 3, 5, 3};
 
