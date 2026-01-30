@@ -22,6 +22,7 @@
 - [装饰器（decorator）](python/decorator.md) 
 - [描述符（descriptor）](python/descriptor.md) 
 - [元类（metaclass）](python/metaclass.md) 
+- [软件测试](python/test.md) 
 
 ### 常用库
 - 标准库
