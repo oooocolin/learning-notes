@@ -3,6 +3,13 @@ title: C++ 17 新特性
 tags:
   - cxx
   - language-feature
+  - structured-binding
+  - if-init-statement
+  - inline-variables
+  - filesystem
+  - constexpr
+  - value-packaging
+  - parallel-algorithms
 ---
 ## 结构化绑定
 结构化绑定允许你把一个由多个值组成的对象，如 `pair` （类似有且仅有两个元素的元组）、`tuple`（类似 Python 的元组）、数组、自定义 struct，拆开成多个变量直接绑定。这大大简化了书写的方式。

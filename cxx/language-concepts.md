@@ -76,4 +76,4 @@ namespace ns {
 _ZN2ns3fooEi      // foo(int)
 _ZN2ns3fooEd      // foo(double)
 ```
-并且不同的编译器重整的风格不同，GCC、Clang、MSVC 都有自己的规则。所以在面对其他语言使用 C++ 的 DLL 无法识别函数名，因为都是 `_ZN2ns3fooEi` 或 `?foo@ns@@YAXH@Z` 的形式而无法调用，只能使用 `extern "C"` 导出 C 风格符号名（详见 [C++ 关键字与符号](cxx-keywords-and-symbols.md) 的 `extern` 关键字），即没有这些参数编码来确保正常调用，但是也就限制了不能导出 C++ 特性的接口，比如不能导出模板、命名空间、类（分别导出指针 + 函数，或结构体 + 函数）等。
+并且不同的编译器重整的风格不同，GCC、Clang、MSVC 都有自己的规则。所以在面对其他语言使用 C++ 的 DLL 无法识别函数名，因为都是 `_ZN2ns3fooEi` 或 `?foo@ns@@YAXH@Z` 的形式而无法调用，只能使用 `extern "C"` 导出 C 风格符号名（详见 [C++ 关键字与符号](keywords-and-symbols.md) 的 `extern` 关键字），即没有这些参数编码来确保正常调用，但是也就限制了不能导出 C++ 特性的接口，比如不能导出模板、命名空间、类（分别导出指针 + 函数，或结构体 + 函数）等。

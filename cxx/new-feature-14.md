@@ -3,8 +3,12 @@ title: C++ 14 新特性
 tags:
   - cxx
   - language-feature
+  - Lambda
+  - auto-type
+  - constexpr
+  - binary-literals
 ---
-## 泛型 lambda
+## 泛型 Lambda
 C++ 11 引入的泛型，但是有一定的限制，比如参数类型必须明确指定类型、无法进行类型推导，本质上还是固定类型的 `operator()` ，而 C++ 14 是模板化的 `operator()` 。C++ 14 在以下几个方面进行了增强。
 - Lambda 参数支持 `auto` 类型。
 ```cpp

@@ -3,6 +3,13 @@ title: C++ 11 新特性
 tags:
   - cxx
   - language-feature
+  - auto-type
+  - Lambda
+  - constexpr
+  - move-semantics
+  - list-initialization
+  - multi-thread
+  - smart-pointer
 ---
 ## 基于范围的 `for` 循环
 是一种简化循环书写的语法糖，其结构为 `for (decl : range) statement;` 相当于一种容器的遍历。

@@ -14,6 +14,7 @@
 ### 基础
 - [Python 容器](python/python-container.md) 
 - [Python 细碎的基础知识](python/python-fragmented-notes.md) 
+- [Python 文件处理](python/file-handing.md) 
 
 ### 进阶
 - [多任务](python/multitask.md) 
@@ -21,6 +22,7 @@
 - [装饰器（decorator）](python/decorator.md) 
 - [描述符（descriptor）](python/descriptor.md) 
 - [元类（metaclass）](python/metaclass.md) 
+- [软件测试](python/test.md) 
 
 ### 常用库
 - 标准库
@@ -29,27 +31,27 @@
 
 ## C++
 ### 基础
-- [C++ 程序结构](cxx/cxx-program-structure.md) 
+- [C++ 程序结构](cxx/program-structure.md) 
 	- 头文件与源文件
 	- 命名空间
-	- [类](cxx/cxx-class.md) 
-	- [模板](cxx/cxx-template.md) 
-- [C++ 的关键字与符号](cxx/cxx-keywords-and-symbols.md) 
-- [C++ 语言概念](cxx/cxx-language-concepts.md) 
+	- [类](cxx/class.md) 
+	- [模板](cxx/template.md) 
+- [C++ 的关键字与符号](cxx/keywords-and-symbols.md) 
+- [C++ 语言概念](cxx/language-concepts.md) 
 
 ### 进阶
-- [内存管理](cxx/cxx-memory-management.md) 
-- [C++ 惯用法](cxx/cxx-idioms.md) 
-- [预处理器与宏](cxx/cxx-preprocessor-macro.md) 
+- [内存管理](cxx/memory-management.md) 
+- [C++ 惯用法](cxx/idioms.md) 
+- [预处理器与宏](cxx/preprocessor-macro.md) 
 - C++ 新特性
-	- [C++ 11](cxx/cxx-new-feature-11.md) 
-	- [C++ 14](cxx/cxx-new-feature-14.md) 
-	- [C++ 17](cxx/cxx-new-feature-17.md) 
-	- [C++ 20](cxx/cxx-new-feature-20.md) 
-	- [C++ 23](cxx/cxx-new-feature-23.md) 
+	- [C++ 11](cxx/new-feature-11.md) 
+	- [C++ 14](cxx/new-feature-14.md) 
+	- [C++ 17](cxx/new-feature-17.md) 
+	- [C++ 20](cxx/new-feature-20.md) 
+	- [C++ 23](cxx/new-feature-23.md) 
 
 ### 常用库
-- [标准库](cxx/cxx-standard-library.md) 
+- [标准库](cxx/standard-library.md) 
 - [Opencv 计算机视觉库](cxx/opencv.md) 
 
 ## AI
